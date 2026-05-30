@@ -2,7 +2,7 @@ import React from 'react';
 import { Canvas } from '@react-three/fiber';
 import { ScrollControls, Scroll } from '@react-three/drei';
 import Scene from './Scene';
-import CyberEnvironment from './CyberEnvironment';
+import AICommandBackground from './AICommandBackground';
 import OverlaySections from './OverlaySections';
 
 const ScrollExperience = () => {
@@ -36,7 +36,7 @@ const ScrollExperience = () => {
         {/* Scroll Controls containing the 3D Scene and the HTML Overlay */}
         <ScrollControls pages={6} damping={0.25} distance={1.2}>
           {/* Futuristic Cinematic Cyber OS Background Environment */}
-          <CyberEnvironment />
+          <AICommandBackground />
 
           {/* Main 3D Space Elements */}
           <Scene />
