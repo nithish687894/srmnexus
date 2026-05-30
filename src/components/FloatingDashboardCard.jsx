@@ -191,14 +191,15 @@ const FloatingDashboardCard = ({ id, title, subtitle, color, gridPos, scatterPos
       <mesh name="chassis">
         <boxGeometry args={[1.8, 1.3, 0.08]} />
         <meshPhysicalMaterial
-          color={color}
+          color="#0f172a"
           emissive={color}
-          emissiveIntensity={0.05}
-          roughness={0.12}
-          metalness={0.15}
-          transmission={0.8} // Frosted glass translucency
-          thickness={0.4}
-          clearcoat={0.3}
+          emissiveIntensity={0.01} // minimal cyber emission
+          roughness={0.08}
+          metalness={0.08}
+          transmission={0.9} // high frosted physical glass
+          thickness={0.6}
+          clearcoat={1.0} // glossy surface
+          clearcoatRoughness={0.04}
           transparent
         />
       </mesh>
@@ -210,7 +211,7 @@ const FloatingDashboardCard = ({ id, title, subtitle, color, gridPos, scatterPos
           color={color}
           wireframe
           transparent
-          opacity={0.3}
+          opacity={0.12} // subtle glow line
         />
       </mesh>
 

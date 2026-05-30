@@ -1,10 +1,86 @@
-import React, { useRef } from 'react';
+import React, { useRef, useMemo } from 'react';
 import { useFrame } from '@react-three/fiber';
 import { useScroll } from '@react-three/drei';
 import * as THREE from 'three';
 import FloatingDashboardCard from './FloatingDashboardCard';
 import AIAssistantPanel from './AIAssistantPanel';
 import { Text } from '@react-three/drei';
+
+// Detailed 3D Column Trend Line for Grades Widget
+const GradeTrendLine = () => {
+  const lineRef = useRef();
+
+  const curve = useMemo(() => {
+    return new THREE.CatmullRomCurve3([
+      new THREE.Vector3(-0.32, -0.05 + 0.15, 0.03),
+      new THREE.Vector3(0, -0.05 + 0.24, 0.03),
+      new THREE.Vector3(0.32, -0.05 + 0.19, 0.03)
+    ]);
+  }, []);
+
+  useFrame((state) => {
+    if (lineRef.current) {
+      lineRef.current.rotation.y = Math.sin(state.clock.elapsedTime * 0.8) * 0.05;
+    }
+  });
+
+  return (
+    <group ref={lineRef}>
+      <mesh>
+        <tubeGeometry args={[curve, 16, 0.015, 6, false]} />
+        <meshBasicMaterial color="#bd00ff" />
+      </mesh>
+      {/* Glow peaks */}
+      <mesh position={[-0.32, -0.05 + 0.15, 0.04]}>
+        <sphereGeometry args={[0.035, 12, 12]} />
+        <meshBasicMaterial color="#00f3ff" />
+      </mesh>
+      <mesh position={[0, -0.05 + 0.24, 0.04]}>
+        <sphereGeometry args={[0.035, 12, 12]} />
+        <meshBasicMaterial color="#bd00ff" />
+      </mesh>
+      <mesh position={[0.32, -0.05 + 0.19, 0.04]}>
+        <sphereGeometry args={[0.035, 12, 12]} />
+        <meshBasicMaterial color="#6366f1" />
+      </mesh>
+    </group>
+  );
+};
+
+// Dial ticking hands for Exams widget
+const ExamDial = () => {
+  const handRef = useRef();
+  
+  useFrame((state) => {
+    if (handRef.current) {
+      handRef.current.rotation.z = -state.clock.elapsedTime * 0.8;
+    }
+  });
+
+  return (
+    <group position={[0, 0.08, 0.02]}>
+      {/* Outer red chronometer casing */}
+      <mesh>
+        <torusGeometry args={[0.2, 0.025, 6, 32]} />
+        <meshBasicMaterial color="#ef4444" />
+      </mesh>
+      
+      {/* Ticking Hand */}
+      <group ref={handRef}>
+        <mesh position={[0, 0.08, 0.01]}>
+          <boxGeometry args={[0.012, 0.15, 0.01]} />
+          <meshBasicMaterial color="#ef4444" />
+        </mesh>
+      </group>
+      
+      {/* Center cap */}
+      <mesh position={[0, 0, 0.02]}>
+        <sphereGeometry args={[0.03, 12, 12]} />
+        <meshBasicMaterial color="#ffffff" />
+      </mesh>
+    </group>
+  );
+};
 
 const StudentCommandCenter = () => {
   const scroll = useScroll();
@@ -22,20 +98,16 @@ const StudentCommandCenter = () => {
       targetOpacity = 0.15;
       targetScale.set(1, 1, 1);
     } else if (r >= 0.16 && r < 0.33) {
-      // Scatter state: dim the dashboard chassis
       const t = (r - 0.16) / 0.17;
       targetOpacity = 0.15 * (1 - t);
       targetScale.set(1 - t * 0.2, 1 - t * 0.2, 1 - t * 0.2);
     } else if (r >= 0.33 && r < 0.50) {
-      // Snapping back state: light up bright cyan
       const t = (r - 0.33) / 0.17;
       targetOpacity = 0.15 + t * 0.25;
       targetScale.set(0.8 + t * 0.2, 0.8 + t * 0.2, 0.8 + t * 0.2);
     } else if (r >= 0.50 && r < 0.83) {
-      // Orbit / AI Zoom: make it very subtle
       targetOpacity = 0.1;
     } else if (r >= 0.83) {
-      // Final OS: bright and complete
       const t = (r - 0.83) / 0.17;
       targetOpacity = 0.1 + t * 0.3;
     }
@@ -48,95 +120,134 @@ const StudentCommandCenter = () => {
     chassisRef.current.scale.lerp(targetScale, delta * 6);
   });
 
-  // Cards configurations: gridPos [x, y, z], scatterPos [x, y, z]
   const cardData = [
     {
       id: 'attendance',
-      title: 'ATTENDANCE',
-      subtitle: 'Required: >75%',
-      color: '#00f3ff', // Cyan
+      title: 'ATTENDANCE SYSTEM',
+      subtitle: '80.4% SGPA SYNC',
+      color: '#00f3ff',
       gridPos: [-2.1, 0.8, 0],
       scatterPos: [-5.0, 4.0, -3.0],
       content: (
         <group position={[0, -0.05, 0]}>
-          {/* Gray background track */}
-          <mesh rotation={[0, 0, 0]}>
-            <torusGeometry args={[0.26, 0.045, 8, 36, Math.PI * 2]} />
-            <meshBasicMaterial color="#1e293b" transparent opacity={0.5} />
-          </mesh>
-          {/* Active progress track */}
-          <mesh rotation={[0, 0, Math.PI / 2]}>
-            <torusGeometry args={[0.26, 0.046, 8, 36, Math.PI * 1.6]} /> {/* 80% */}
-            <meshBasicMaterial color="#00f3ff" />
-          </mesh>
+          {/* Dual concentric progress tracks */}
+          <group position={[0, 0.05, 0]}>
+            {/* 1. Primary Attendance track */}
+            <mesh>
+              <torusGeometry args={[0.26, 0.035, 8, 36]} />
+              <meshBasicMaterial color="#1e293b" transparent opacity={0.5} />
+            </mesh>
+            <mesh rotation={[0, 0, Math.PI / 2]}>
+              <torusGeometry args={[0.26, 0.036, 8, 36, Math.PI * 1.6]} /> {/* 80% */}
+              <meshBasicMaterial color="#00f3ff" />
+            </mesh>
+
+            {/* 2. Required 75% indicator ring */}
+            <mesh>
+              <torusGeometry args={[0.18, 0.015, 6, 24]} />
+              <meshBasicMaterial color="#334155" transparent opacity={0.4} />
+            </mesh>
+            <mesh rotation={[0, 0, Math.PI / 2]}>
+              <torusGeometry args={[0.18, 0.016, 6, 24, Math.PI * 1.5]} /> {/* 75% */}
+              <meshBasicMaterial color="#bd00ff" />
+            </mesh>
+          </group>
+
           <Text
-            position={[0, -0.02, 0.02]}
-            fontSize={0.12}
+            position={[0, 0.03, 0.02]}
+            fontSize={0.11}
             color="#ffffff"
             fontWeight="bold"
           >
-            80%
+            80.4%
           </Text>
           <Text
-            position={[0, -0.25, 0.02]}
+            position={[0, -0.28, 0.02]}
             fontSize={0.045}
             color="#94a3b8"
           >
-            2 safe classes left
+            MA-302, CS-301: Safe • 2 Classes left
           </Text>
         </group>
       )
     },
     {
       id: 'marks',
-      title: 'GRADES & CGPA',
-      subtitle: 'SGPA Analytics',
-      color: '#bd00ff', // Violet
+      title: 'GRADES & ANALYTICS',
+      subtitle: 'SGPA TREND COGNITIVE',
+      color: '#bd00ff',
       gridPos: [0, 0.8, 0],
       scatterPos: [1.2, 5.0, -4.5],
       content: (
         <group position={[0, -0.05, 0]}>
-          {/* 3D Bar columns */}
+          {/* Reference Grade lines */}
+          <group position={[0, 0.05, -0.02]}>
+            {[-0.1, 0.1, 0.3].map((y, idx) => (
+              <mesh key={idx} position={[0, y, 0]}>
+                <planeGeometry args={[1.5, 0.005]} />
+                <meshBasicMaterial color="#334155" transparent opacity={0.3} />
+              </mesh>
+            ))}
+          </group>
+
+          {/* Detailed 3D Bars */}
           <mesh position={[-0.32, -0.15 + 0.15, 0]}>
-            <boxGeometry args={[0.13, 0.3, 0.05]} />
-            <meshBasicMaterial color="#00f3ff" />
+            <boxGeometry args={[0.11, 0.3, 0.04]} />
+            <meshBasicMaterial color="#00f3ff" transparent opacity={0.65} />
           </mesh>
           <mesh position={[0, -0.15 + 0.24, 0]}>
-            <boxGeometry args={[0.13, 0.48, 0.05]} />
-            <meshBasicMaterial color="#bd00ff" />
+            <boxGeometry args={[0.11, 0.48, 0.04]} />
+            <meshBasicMaterial color="#bd00ff" transparent opacity={0.65} />
           </mesh>
           <mesh position={[0.32, -0.15 + 0.19, 0]}>
-            <boxGeometry args={[0.13, 0.38, 0.05]} />
-            <meshBasicMaterial color="#6366f1" />
+            <boxGeometry args={[0.11, 0.38, 0.04]} />
+            <meshBasicMaterial color="#6366f1" transparent opacity={0.65} />
           </mesh>
+
+          {/* Emissive trend path conduit */}
+          <GradeTrendLine />
+
           <Text
-            position={[0, -0.25, 0.02]}
-            fontSize={0.06}
+            position={[0, -0.28, 0.02]}
+            fontSize={0.052}
             color="#ffffff"
             fontWeight="bold"
           >
-            SGPA: 8.75
+            CGPA: 8.75 [Target: 9.0]
           </Text>
         </group>
       )
     },
     {
       id: 'timetable',
-      title: 'TIMETABLE',
-      subtitle: 'Today classes schedule',
-      color: '#00f3ff', // Cyan
+      title: 'TIMETABLE TIMELINE',
+      subtitle: 'ACTIVE SLOT SWEEPER',
+      color: '#00f3ff',
       gridPos: [2.1, 0.8, 0],
       scatterPos: [5.0, 3.5, -3.0],
       content: (
         <group position={[0, 0.04, 0]}>
+          {/* Vertical connection timeline rail */}
+          <mesh position={[-0.6, -0.18, 0]}>
+            <planeGeometry args={[0.015, 0.36]} />
+            <meshBasicMaterial color="#334155" />
+          </mesh>
+
           {[-0.05, -0.18, -0.31].map((y, idx) => (
             <group key={idx} position={[0, y, 0]}>
-              <mesh>
-                <planeGeometry args={[1.5, 0.09]} />
-                <meshBasicMaterial color={idx === 0 ? "#00f3ff" : "#1e293b"} transparent opacity={idx === 0 ? 0.18 : 0.4} />
+              <mesh position={[0.05, 0, 0]}>
+                <planeGeometry args={[1.3, 0.09]} />
+                <meshBasicMaterial color={idx === 0 ? "#00f3ff" : "#1e293b"} transparent opacity={idx === 0 ? 0.18 : 0.45} />
               </mesh>
+              
+              {/* Timeline dot */}
+              <mesh position={[-0.6, 0, 0.01]}>
+                <sphereGeometry args={[0.035, 12, 12]} />
+                <meshBasicMaterial color={idx === 0 ? "#00f3ff" : "#475569"} />
+              </mesh>
+
               <Text
-                position={[-0.68, 0, 0.01]}
+                position={[-0.45, 0, 0.01]}
                 fontSize={0.042}
                 color="#ffffff"
                 anchorX="left"
@@ -144,7 +255,7 @@ const StudentCommandCenter = () => {
                 {idx === 0 ? "09:00 - CS-301" : idx === 1 ? "11:00 - MA-302" : "14:00 - EC-305"}
               </Text>
               <Text
-                position={[0.68, 0, 0.01]}
+                position={[0.62, 0, 0.01]}
                 fontSize={0.038}
                 color={idx === 0 ? "#00f3ff" : "#94a3b8"}
                 anchorX="right"
@@ -159,65 +270,63 @@ const StudentCommandCenter = () => {
     {
       id: 'exams',
       title: 'EXAMS COUNTDOWN',
-      subtitle: 'T-Minus Schedule',
-      color: '#bd00ff', // Violet
+      subtitle: 'T-MINUS SYSTEM WARNING',
+      color: '#bd00ff',
       gridPos: [-2.1, -0.8, 0],
       scatterPos: [-5.0, -4.5, -3.0],
       content: (
         <group position={[0, -0.05, 0]}>
-          <mesh position={[0, 0.08, 0]}>
-            <torusGeometry args={[0.2, 0.025, 6, 24]} />
-            <meshBasicMaterial color="#ef4444" />
-          </mesh>
+          {/* Detailed dial chronometer */}
+          <ExamDial />
+
           <Text
-            position={[0, 0.07, 0.02]}
-            fontSize={0.08}
-            color="#ffffff"
-            fontWeight="bold"
-          >
-            12d
-          </Text>
-          <Text
-            position={[0, -0.16, 0.02]}
-            fontSize={0.048}
+            position={[0, -0.18, 0.02]}
+            fontSize={0.052}
             color="#fca5a5"
             fontWeight="bold"
           >
-            Math Mid-Sem
+            T-MINUS 12d 04h
           </Text>
           <Text
-            position={[0, -0.26, 0.02]}
+            position={[0, -0.28, 0.02]}
             fontSize={0.038}
             color="#94a3b8"
           >
-            Room 402 • 09:30 AM
+            CS-302 Theory • Room 402
           </Text>
         </group>
       )
     },
     {
       id: 'tasks',
-      title: 'TASK PLANNER',
-      subtitle: 'Pending Assignments',
-      color: '#00f3ff', // Cyan
+      title: 'TASK BOARD PLANNER',
+      subtitle: 'PENDING ACTION ITEMS',
+      color: '#00f3ff',
       gridPos: [0, -0.8, 0],
       scatterPos: [-1.2, -5.0, -4.5],
       content: (
         <group position={[0, 0.04, 0]}>
           {[-0.05, -0.18, -0.31].map((y, idx) => (
             <group key={idx} position={[0, y, 0]}>
-              {/* Spherical Checkbox */}
+              {/* Progress checkbox widgets */}
               <mesh position={[-0.68, 0, 0]}>
-                <sphereGeometry args={[0.035, 12, 12]} />
+                <sphereGeometry args={[0.038, 12, 12]} />
                 <meshBasicMaterial color={idx < 2 ? "#10b981" : "#4b5563"} />
               </mesh>
+              
+              {/* Task name card */}
+              <mesh position={[0.06, 0, -0.01]}>
+                <planeGeometry args={[1.2, 0.09]} />
+                <meshBasicMaterial color="#1e293b" transparent opacity={0.35} />
+              </mesh>
+
               <Text
-                position={[-0.58, 0, 0.01]}
+                position={[-0.56, 0, 0.01]}
                 fontSize={0.042}
                 color={idx < 2 ? "#94a3b8" : "#ffffff"}
                 anchorX="left"
               >
-                {idx === 0 ? "Complete CS Assignment" : idx === 1 ? "Submit Seminar Slides" : "Register Exam Portal"}
+                {idx === 0 ? "CS Lab Assignment" : idx === 1 ? "Seminar PPT slides" : "Register Exam Portal"}
               </Text>
             </group>
           ))}
@@ -226,9 +335,9 @@ const StudentCommandCenter = () => {
     },
     {
       id: 'ai',
-      title: 'AI PORTAL CORE',
-      subtitle: 'Active Proactive Guidance',
-      color: '#bd00ff', // Violet
+      title: 'NEXUS COGNITIVE CORE',
+      subtitle: 'PROACTIVE NEURAL PREVIEW',
+      color: '#bd00ff',
       gridPos: [2.1, -0.8, 0],
       scatterPos: [5.0, -4.0, -3.0],
       content: <AIAssistantPanel />
@@ -237,7 +346,7 @@ const StudentCommandCenter = () => {
 
   return (
     <group>
-      {/* Dynamic 3D Chassis Dashboard Shell */}
+      {/* 3D Chassis Dashboard Shell */}
       <mesh ref={chassisRef} position={[0, 0, -0.06]}>
         <planeGeometry args={[6.4, 3.2]} />
         <meshBasicMaterial 
@@ -248,33 +357,31 @@ const StudentCommandCenter = () => {
         />
       </mesh>
 
-      {/* Grid Connecting Wire lines (Holographic paths between grid slots) */}
+      {/* Holographic Seam Connectors */}
       <group position={[0, 0, -0.05]}>
-        {/* Horizontal Connector */}
         <mesh position={[0, 0.8, 0]}>
-          <planeGeometry args={[4.2, 0.01]} />
+          <planeGeometry args={[4.2, 0.008]} />
           <meshBasicMaterial color="#38bdf8" transparent opacity={0.2} />
         </mesh>
         <mesh position={[0, -0.8, 0]}>
-          <planeGeometry args={[4.2, 0.01]} />
+          <planeGeometry args={[4.2, 0.008]} />
           <meshBasicMaterial color="#a78bfa" transparent opacity={0.2} />
         </mesh>
-        {/* Vertical Connectors */}
         <mesh position={[-2.1, 0, 0]}>
-          <planeGeometry args={[0.01, 1.6]} />
+          <planeGeometry args={[0.008, 1.6]} />
           <meshBasicMaterial color="#38bdf8" transparent opacity={0.2} />
         </mesh>
         <mesh position={[0, 0, 0]}>
-          <planeGeometry args={[0.01, 1.6]} />
+          <planeGeometry args={[0.008, 1.6]} />
           <meshBasicMaterial color="#a78bfa" transparent opacity={0.2} />
         </mesh>
         <mesh position={[2.1, 0, 0]}>
-          <planeGeometry args={[0.01, 1.6]} />
+          <planeGeometry args={[0.008, 1.6]} />
           <meshBasicMaterial color="#38bdf8" transparent opacity={0.2} />
         </mesh>
       </group>
 
-      {/* Cards Mapping */}
+      {/* Render the redesigned expensive widget cards */}
       {cardData.map((card, idx) => (
         <FloatingDashboardCard
           key={card.id}
