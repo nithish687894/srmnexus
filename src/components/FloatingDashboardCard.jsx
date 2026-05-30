@@ -241,7 +241,6 @@ const FloatingDashboardCard = ({ id, title, subtitle, color, gridPos, scatterPos
         position={[-0.8, 0.48, 0.06]}
         fontSize={0.075}
         color="#FFFFFF"
-        font="https://fonts.gstatic.com/s/outfit/v11/q5uUd1ypQ7YQDhk2WD.woff2"
         anchorX="left"
         anchorY="top"
         fontWeight="bold"
@@ -253,7 +252,6 @@ const FloatingDashboardCard = ({ id, title, subtitle, color, gridPos, scatterPos
         position={[-0.8, 0.38, 0.06]}
         fontSize={0.045}
         color="#94A3B8"
-        font="https://fonts.gstatic.com/s/inter/v18/UcCO3FwrK3iLTeHuS_fvQtMwCp50KnMw2boKoduKmMEVuLyfMZhrib2BgA.woff2"
         anchorX="left"
         anchorY="top"
       >

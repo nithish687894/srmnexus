@@ -73,7 +73,6 @@ const StudentCommandCenter = () => {
             position={[0, -0.02, 0.02]}
             fontSize={0.12}
             color="#ffffff"
-            font="https://fonts.gstatic.com/s/outfit/v11/q5uUd1ypQ7YQDhk2WD.woff2"
             fontWeight="bold"
           >
             80%
@@ -82,7 +81,6 @@ const StudentCommandCenter = () => {
             position={[0, -0.25, 0.02]}
             fontSize={0.045}
             color="#94a3b8"
-            font="https://fonts.gstatic.com/s/inter/v18/UcCO3FwrK3iLTeHuS_fvQtMwCp50KnMw2boKoduKmMEVuLyfMZhrib2BgA.woff2"
           >
             2 safe classes left
           </Text>
@@ -115,7 +113,6 @@ const StudentCommandCenter = () => {
             position={[0, -0.25, 0.02]}
             fontSize={0.06}
             color="#ffffff"
-            font="https://fonts.gstatic.com/s/outfit/v11/q5uUd1ypQ7YQDhk2WD.woff2"
             fontWeight="bold"
           >
             SGPA: 8.75
@@ -142,7 +139,6 @@ const StudentCommandCenter = () => {
                 position={[-0.68, 0, 0.01]}
                 fontSize={0.042}
                 color="#ffffff"
-                font="https://fonts.gstatic.com/s/inter/v18/UcCO3FwrK3iLTeHuS_fvQtMwCp50KnMw2boKoduKmMEVuLyfMZhrib2BgA.woff2"
                 anchorX="left"
               >
                 {idx === 0 ? "09:00 - CS-301" : idx === 1 ? "11:00 - MA-302" : "14:00 - EC-305"}
@@ -151,7 +147,6 @@ const StudentCommandCenter = () => {
                 position={[0.68, 0, 0.01]}
                 fontSize={0.038}
                 color={idx === 0 ? "#00f3ff" : "#94a3b8"}
-                font="https://fonts.gstatic.com/s/inter/v18/UcCO3FwrK3iLTeHuS_fvQtMwCp50KnMw2boKoduKmMEVuLyfMZhrib2BgA.woff2"
                 anchorX="right"
               >
                 {idx === 0 ? "Active" : "Upcoming"}
@@ -178,7 +173,6 @@ const StudentCommandCenter = () => {
             position={[0, 0.07, 0.02]}
             fontSize={0.08}
             color="#ffffff"
-            font="https://fonts.gstatic.com/s/outfit/v11/q5uUd1ypQ7YQDhk2WD.woff2"
             fontWeight="bold"
           >
             12d
@@ -187,7 +181,6 @@ const StudentCommandCenter = () => {
             position={[0, -0.16, 0.02]}
             fontSize={0.048}
             color="#fca5a5"
-            font="https://fonts.gstatic.com/s/inter/v18/UcCO3FwrK3iLTeHuS_fvQtMwCp50KnMw2boKoduKmMEVuLyfMZhrib2BgA.woff2"
             fontWeight="bold"
           >
             Math Mid-Sem
@@ -196,7 +189,6 @@ const StudentCommandCenter = () => {
             position={[0, -0.26, 0.02]}
             fontSize={0.038}
             color="#94a3b8"
-            font="https://fonts.gstatic.com/s/inter/v18/UcCO3FwrK3iLTeHuS_fvQtMwCp50KnMw2boKoduKmMEVuLyfMZhrib2BgA.woff2"
           >
             Room 402 • 09:30 AM
           </Text>
@@ -223,7 +215,6 @@ const StudentCommandCenter = () => {
                 position={[-0.58, 0, 0.01]}
                 fontSize={0.042}
                 color={idx < 2 ? "#94a3b8" : "#ffffff"}
-                font="https://fonts.gstatic.com/s/inter/v18/UcCO3FwrK3iLTeHuS_fvQtMwCp50KnMw2boKoduKmMEVuLyfMZhrib2BgA.woff2"
                 anchorX="left"
               >
                 {idx === 0 ? "Complete CS Assignment" : idx === 1 ? "Submit Seminar Slides" : "Register Exam Portal"}

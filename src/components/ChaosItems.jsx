@@ -216,7 +216,6 @@ const ChaosItems = () => {
           <Text
             position={[0, item.size[1] * 0.35, item.size[2] * 0.52]}
             fontSize={0.08}
-            font="https://fonts.gstatic.com/s/outfit/v11/q5uUd1ypQ7YQDhk2WD.woff2"
             color="#FFFFFF"
             anchorX="center"
             anchorY="middle"

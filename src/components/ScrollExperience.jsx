@@ -1,68 +1,8 @@
-import React, { useRef, useMemo } from 'react';
-import { Canvas, useFrame } from '@react-three/fiber';
-import { ScrollControls, Scroll } from '@react-three/drei';
+import React from 'react';
+import { Canvas } from '@react-three/fiber';
+import { ScrollControls, Scroll, Stars } from '@react-three/drei';
 import Scene from './Scene';
 import OverlaySections from './OverlaySections';
-
-// Custom High-Performance Particle Field
-const ParticleField = () => {
-  const pointsRef = useRef();
-  const count = 1200;
-  
-  const [positions, colors] = useMemo(() => {
-    const pos = new Float32Array(count * 3);
-    const cols = new Float32Array(count * 3);
-    for (let i = 0; i < count; i++) {
-      // Position spread
-      pos[i * 3] = (Math.random() - 0.5) * 20;
-      pos[i * 3 + 1] = (Math.random() - 0.5) * 20;
-      pos[i * 3 + 2] = (Math.random() - 0.5) * 20;
-      
-      // Cyber colors palette (Cyan, Violet, Neon Blue)
-      const colorRand = Math.random();
-      if (colorRand < 0.4) {
-        cols[i * 3] = 0.0;     cols[i * 3 + 1] = 0.95;   cols[i * 3 + 2] = 1.0;  // #00f3ff Cyan
-      } else if (colorRand < 0.7) {
-        cols[i * 3] = 0.74;    cols[i * 3 + 1] = 0.0;    cols[i * 3 + 2] = 1.0;  // #bd00ff Violet
-      } else {
-        cols[i * 3] = 0.23;    cols[i * 3 + 1] = 0.51;   cols[i * 3 + 2] = 0.96; // #3b82f6 Blue
-      }
-    }
-    return [pos, cols];
-  }, []);
-
-  useFrame((state) => {
-    const time = state.clock.elapsedTime;
-    if (pointsRef.current) {
-      // Gentle drift rotation
-      pointsRef.current.rotation.y = time * 0.015;
-      pointsRef.current.rotation.x = time * 0.008;
-    }
-  });
-
-  return (
-    <points ref={pointsRef}>
-      <bufferGeometry>
-        <bufferAttribute
-          attach="attributes-position"
-          args={[positions, 3]}
-        />
-        <bufferAttribute
-          attach="attributes-color"
-          args={[colors, 3]}
-        />
-      </bufferGeometry>
-      <pointsMaterial
-        size={0.045}
-        vertexColors
-        transparent
-        opacity={0.7}
-        sizeAttenuation={true}
-        depthWrite={false}
-      />
-    </points>
-  );
-};
 
 const ScrollExperience = () => {
   return (
@@ -92,8 +32,8 @@ const ScrollExperience = () => {
       >
         <color attach="background" args={["#05050c"]} />
         
-        {/* Procedural slow-drift particle universe */}
-        <ParticleField />
+        {/* Native optimized slow-drift star field */}
+        <Stars radius={120} depth={50} count={1000} factor={6} saturation={0.5} fade speed={1.5} />
 
         {/* Scroll Controls containing the 3D Scene and the HTML Overlay */}
         <ScrollControls pages={6} damping={0.25} distance={1.2}>
