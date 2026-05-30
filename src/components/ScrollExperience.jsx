@@ -1,7 +1,8 @@
 import React from 'react';
 import { Canvas } from '@react-three/fiber';
-import { ScrollControls, Scroll, Stars } from '@react-three/drei';
+import { ScrollControls, Scroll } from '@react-three/drei';
 import Scene from './Scene';
+import CyberEnvironment from './CyberEnvironment';
 import OverlaySections from './OverlaySections';
 
 const ScrollExperience = () => {
@@ -32,11 +33,11 @@ const ScrollExperience = () => {
       >
         <color attach="background" args={["#05050c"]} />
         
-        {/* Native optimized slow-drift star field */}
-        <Stars radius={120} depth={50} count={1000} factor={6} saturation={0.5} fade speed={1.5} />
-
         {/* Scroll Controls containing the 3D Scene and the HTML Overlay */}
         <ScrollControls pages={6} damping={0.25} distance={1.2}>
+          {/* Futuristic Cinematic Cyber OS Background Environment */}
+          <CyberEnvironment />
+
           {/* Main 3D Space Elements */}
           <Scene />
           
